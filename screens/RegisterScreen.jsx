@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import { firebaseConfig } from '../config.js';
 import { initializeApp } from "@firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "@firebase/auth";
@@ -10,6 +10,8 @@ const RED = "#f92045";
 const WHITE = "#F1F1F1";
 const LIGHT_GRAY = "#D3D3D3";
 
+const image = { uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kldfJdqlSVro8yrhaAWnMcAgd0r.jpg" }
+
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
@@ -18,6 +20,8 @@ const db = getFirestore(firebaseApp);
 const SignUpScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [error, setError] = useState("");
     const submit = () => {
 
@@ -25,11 +29,10 @@ const SignUpScreen = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-
                 setDoc(doc(db, "users", email), {
                     email: email,
-                    firstname: "firstname",
-                    lastname: "lastname"
+                    firstname: firstname,
+                    lastname: lastname
                 });
                 console.log(user => user);
             })
@@ -43,29 +46,47 @@ const SignUpScreen = () => {
     //console.log(auth);
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <View>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Enter your email"
-                    onChangeText={setEmail}
-                    defaultValue={email}
-                    keyboardType="email-address"
-                />
-                {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Enter your password"
-                    onChangeText={setPassword}
-                    secureTextEntry={true}
-                    defaultValue={password}
-                />
-                {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
-                <TouchableOpacity onPress={submit}>
-                    <View style={styles.button} >
-                        <Text style={styles.buttonText}> Register</Text>
+            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                <View style={styles.boxCard}>
+                    <View style={[styles.card, styles.elevation]}>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Enter your email"
+                            onChangeText={setEmail}
+                            defaultValue={email}
+                            keyboardType="email-address"
+                        />
+                        {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Enter your password"
+                            onChangeText={setPassword}
+                            secureTextEntry={true}
+                            defaultValue={password}
+                        />
+                        {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Enter your firstname"
+                            onChangeText={setFirstname}
+                            defaultValue={firstname}
+                        />
+                        {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Enter your lastname"
+                            onChangeText={setLastname}
+                            defaultValue={lastname}
+                        />
+                        {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
+                        <TouchableOpacity onPress={submit}>
+                            <View style={styles.button} >
+                                <Text style={styles.buttonText}> Register</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </ImageBackground>
         </View>
     );
 }
@@ -91,15 +112,37 @@ const styles = StyleSheet.create({
     textInput: {
         height: 40,
         backgroundColor: WHITE,
-        color: LIGHT_GRAY,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 15,
         fontSize: 16,
         marginTop: 10,
-        marginBottom: 10
+        marginBottom: 10,
+        padding: 4,
+        borderBottomColor: "red",
+        borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    boxCard: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    card: {
+        backgroundColor: 'white',
+        opacity: .7,
+        borderRadius: 8,
+        paddingVertical: 45,
+        paddingHorizontal: 25,
+        marginVertical: 10,
+        width: 300
+    },
+    elevation: {
+        elevation: 20,
+        shadowColor: '#52006A',
+    },
+    image: {
+        flex: 1,
+        justifyContent: "center",
+        width: '100%'
     }
 });
 
