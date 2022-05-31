@@ -18,7 +18,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstname, setFirstname] = useState('');
@@ -31,7 +31,7 @@ const SignUpScreen = () => {
                 // Signed in 
                 const user = userCredential.user;
                 setDoc(doc(db, "users", email), {
-                    email: email.toLocaleLowerCase(),
+                    email: email.toLowerCase(),
                     firstname: firstname,
                     lastname: lastname
                 });
@@ -39,6 +39,7 @@ const SignUpScreen = () => {
                     type: 'success',
                     text2: 'Bravo! vous faites partie de notre communauté!! 👋'
                 });
+                navigation.navigate('Login');
             })
             .catch((error) => {
                 const errorCode = error.code;

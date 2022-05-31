@@ -17,7 +17,7 @@ const db = getFirestore(firebaseApp);
 const image = {
     uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/t9JGg10CW1DzXEdWL54ewkUko6N.jpg"
 }
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -28,18 +28,18 @@ const LoginScreen = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                getDoc(doc(db, "users", user.email)).then(docSnap => {
+                getDoc(doc(db, "users", user.email.toLowerCase())).then(docSnap => {
                     if (docSnap.exists()) {
                         console.log("Document data:", docSnap.data());
                     } else {
                         console.log("No such document!");
                     }
                 })
-
                 Toast.show({
                     type: 'success',
                     text2: 'Bienvenue et bonne visite!! 👋'
                 });
+                //navigation.navigate('Movies')
             })
             .catch((error) => {
                 const errorCode = error.code;

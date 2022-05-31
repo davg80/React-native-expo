@@ -6,6 +6,7 @@ import Toast from 'react-native-toast-message';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import MoviesScreen from './screens/MoviesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Movies" component={MoviesScreen} />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />
