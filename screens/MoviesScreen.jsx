@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
+import HeaderComponent from '../components/HeaderComponent';
 import { useFirebase } from '../Hooks/useFirebase';
 
 const RED = "#f92045";
@@ -10,17 +11,7 @@ const HomeScreen = () => {
     console.log("user => " + user.email);
     return (
         <View style={styles.containerMovies}>
-            <View style={styles.boxUsername}>
-                <View>
-                    <Image
-                        style={styles.avatar}
-                        source={require('../assets/avatar.png')}
-                    />
-                </View>
-                <View>
-                    {user !== null && <Text style={styles.userText}>Bonjour {user.firstname} {user.lastname}</Text>}
-                </View>
-            </View>
+            <HeaderComponent user={user}></HeaderComponent>
         </View>
     );
 }
@@ -33,7 +24,6 @@ const styles = StyleSheet.create({
         backgroundColor: RED,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'flex-end',
         alignItems: 'center',
         padding: 10
     },

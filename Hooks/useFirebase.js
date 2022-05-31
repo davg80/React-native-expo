@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react'
 import { initializeApp } from "@firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { getFirestore } from "@firebase/firestore";
 
 // Your web app's Firebase configuration
@@ -14,7 +14,7 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig, "app");
-const auth = getAuth(firebaseApp);
+const auth = getAuth(firebaseApp);  
 const db = getFirestore(firebaseApp);
     
 const FirebaseContext = React.createContext();
@@ -24,7 +24,7 @@ export const useFirebase = () => useContext(FirebaseContext)
 function AuthProvider({children}) {
     const [user, setUser] = useState(null);
   return (
-    <FirebaseContext.Provider value={{auth, db, user, setUser}}>
+    <FirebaseContext.Provider value={{auth, db, user, setUser, signOut}}>
       {children}
     </FirebaseContext.Provider>
   )
