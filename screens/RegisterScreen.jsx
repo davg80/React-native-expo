@@ -5,6 +5,7 @@ import { initializeApp } from "@firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "@firebase/auth";
 import { getFirestore } from "@firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
+import Toast from 'react-native-toast-message';
 
 const RED = "#f92045";
 const WHITE = "#F1F1F1";
@@ -30,17 +31,24 @@ const SignUpScreen = () => {
                 // Signed in 
                 const user = userCredential.user;
                 setDoc(doc(db, "users", email), {
-                    email: email,
+                    email: email.toLocaleLowerCase(),
                     firstname: firstname,
                     lastname: lastname
                 });
-                console.log(user => user);
+                Toast.show({
+                    type: 'success',
+                    text2: 'Bravo! vous faites partie de notre communauté!! 👋'
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(error.code);
                 setError(error.message);
+                Toast.show({
+                    type: 'error',
+                    text2: 'Une erreur est survenue👋'
+                });
             });
     }
     //console.log(auth);
@@ -49,6 +57,7 @@ const SignUpScreen = () => {
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 <View style={styles.boxCard}>
                     <View style={[styles.card, styles.elevation]}>
+                        <Text style={styles.title}>Create an account!</Text>
                         <TextInput
                             style={styles.textInput}
                             placeholder="Enter your email"
@@ -92,6 +101,9 @@ const SignUpScreen = () => {
 }
 
 const styles = StyleSheet.create({
+    title: {
+        fontSize: 25,
+    },
     button: {
         height: 40,
         margin: 12,
@@ -107,7 +119,8 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     buttonText: {
-        color: "#F1F1F1"
+        color: "#F1F1F1",
+        fontSize: 15
     },
     textInput: {
         height: 40,

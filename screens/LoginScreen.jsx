@@ -3,8 +3,8 @@ import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } 
 import { firebaseConfig } from '../config.js';
 import { initializeApp } from "@firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore } from "@firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore } from "@firebase/firestore";
+import Toast from 'react-native-toast-message';
 
 const RED = "#f92045";
 const WHITE = "#F1F1F1";
@@ -28,19 +28,36 @@ const LoginScreen = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
+                getDoc(doc(db, "users", user.email)).then(docSnap => {
+                    if (docSnap.exists()) {
+                        console.log("Document data:", docSnap.data());
+                    } else {
+                        console.log("No such document!");
+                    }
+                })
+
+                Toast.show({
+                    type: 'success',
+                    text2: 'Bienvenue et bonne visite!! 👋'
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 setError(error.message);
+                Toast.show({
+                    type: 'error',
+                    text2: 'Une erreur est survenue👋'
+                });
             });
     }
-    //console.log(auth);
+
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 <View style={styles.boxCard}>
                     <View style={[styles.card, styles.elevation]}>
+                        <Text style={styles.title}>Log in now!</Text>
                         <TextInput
                             style={styles.textInput}
                             placeholder="Enter your email"
@@ -59,7 +76,7 @@ const LoginScreen = () => {
                         />
                         {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
                         <TouchableOpacity onPress={submit}>
-                            <View style={styles.button}>
+                            <View style={styles.button} >
                                 <Text style={styles.buttonText}> Login</Text>
                             </View>
                         </TouchableOpacity>
@@ -71,6 +88,9 @@ const LoginScreen = () => {
 }
 
 const styles = StyleSheet.create({
+    title: {
+        fontSize: 25,
+    },
     button: {
         height: 40,
         margin: 12,
@@ -86,7 +106,8 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     buttonText: {
-        color: "#F1F1F1"
+        color: "#F1F1F1",
+        fontSize: 15
     },
     textInput: {
         height: 40,
