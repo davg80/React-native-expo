@@ -24,9 +24,9 @@ const LoginScreen = ({ navigation }) => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in 
-                const userReceived = userCredential.user;
+                const newUser = userCredential.user;
                 // Read data
-                getDoc(doc(db, "users", userReceived.email.toLowerCase())).then(currentUser => {
+                getDoc(doc(db, "users", newUser.email.toLowerCase())).then(currentUser => {
                     if (currentUser.exists()) {
                         console.log("Document data:", currentUser.data());
                         setUser(currentUser.data());

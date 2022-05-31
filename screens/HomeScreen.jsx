@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 const image = {
     uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/9j21DXo7Gwtfxj81iC20AbOqumt.jpg"
 }
@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={styles.container}>
                     <TouchableOpacity>
                         <View style={styles.button}>
-                            <Text style={styles.buttonText} onPress={() => navigation.navigate('Login')}> Got to Login</Text>
+                            <Text style={styles.buttonText} onPress={() => navigation.navigate('Login')}> Go to Login</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
