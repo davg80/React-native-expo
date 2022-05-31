@@ -1,45 +1,44 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
-import { firebaseConfig } from '../config.js';
-import { initializeApp } from "@firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, getFirestore } from "@firebase/firestore";
 import Toast from 'react-native-toast-message';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "@firebase/firestore";
+import { useFirebase } from '../Hooks/useFirebase';
 
 const RED = "#f92045";
 const WHITE = "#F1F1F1";
 const LIGHT_GRAY = "#D3D3D3";
 
-// Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig, "app");
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
+
 const image = {
     uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/t9JGg10CW1DzXEdWL54ewkUko6N.jpg"
 }
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const [error, setError] = useState("");
+
+    const { auth, db, user, setUser } = useFirebase()
 
     const submit = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in 
-                const user = userCredential.user;
-                getDoc(doc(db, "users", user.email.toLowerCase())).then(docSnap => {
-                    if (docSnap.exists()) {
-                        console.log("Document data:", docSnap.data());
+                const userReceived = userCredential.user;
+                // Read data
+                getDoc(doc(db, "users", userReceived.email.toLowerCase())).then(currentUser => {
+                    if (currentUser.exists()) {
+                        console.log("Document data:", currentUser.data());
+                        setUser(currentUser.data());
                     } else {
                         console.log("No such document!");
                     }
                 })
                 Toast.show({
                     type: 'success',
-                    text2: 'Bienvenue et bonne visite!! 👋'
+                    text2: `Bienvenue ${user.lastname} ${user.firstname} et bonne visite!! 👋`
                 });
-                //navigation.navigate('Movies')
+                navigation.navigate('Movies')
             })
             .catch((error) => {
                 const errorCode = error.code;

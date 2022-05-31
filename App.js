@@ -7,23 +7,26 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import MoviesScreen from './screens/MoviesScreen';
+import AuthProvider from './Hooks/useFirebase';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{
-          headerShown: false
-        }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Movies" component={MoviesScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <Toast />
+      <AuthProvider>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{
+            headerShown: false
+          }}>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Movies" component={MoviesScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <Toast />
+      </AuthProvider>
     </>
   );
 }

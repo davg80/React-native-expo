@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
-import { firebaseConfig } from '../config.js';
-import { initializeApp } from "@firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "@firebase/auth";
-import { getFirestore } from "@firebase/firestore";
+import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
+import { useFirebase } from '../Hooks/useFirebase.js';
 
 const RED = "#f92045";
 const WHITE = "#F1F1F1";
@@ -13,10 +11,6 @@ const LIGHT_GRAY = "#D3D3D3";
 
 const image = { uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kldfJdqlSVro8yrhaAWnMcAgd0r.jpg" }
 
-// Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
 
 const SignUpScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -24,12 +18,15 @@ const SignUpScreen = ({ navigation }) => {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [error, setError] = useState("");
+    const { auth, db, user, setUser } = useFirebase();
+
     const submit = () => {
 
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in 
-                const user = userCredential.user;
+                user = userCredential.user;
+                // Register data
                 setDoc(doc(db, "users", email), {
                     email: email.toLowerCase(),
                     firstname: firstname,
