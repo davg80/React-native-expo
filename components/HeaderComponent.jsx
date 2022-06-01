@@ -13,14 +13,12 @@ const HeaderComponent = ({ user }) => {
 
     const logout = () => {
         signOut(auth).then(() => {
-            console.log("Salut");
             Toast.show({
                 type: 'success',
                 text2: `À Bientôt ${user.lastname} ${user.firstname} !!`
             });
             navigation.navigate('Home');
         }).catch((error) => {
-            console.log(error);
             Toast.show({
                 type: 'error',
                 text2: `Une erreur est survenue!!`
@@ -40,9 +38,10 @@ const HeaderComponent = ({ user }) => {
                     {user !== null && <Text style={styles.userText}>Bonjour {user.firstname} {user.lastname}</Text>}
                 </View>
                 <TouchableOpacity onPress={logout}>
-                    <View style={styles.button} >
-                        <Text style={styles.buttonText}>Logout</Text>
-                    </View>
+                    <Image
+                        style={styles.exit}
+                        source={require('../assets/images/exit.png')}
+                    />
                 </TouchableOpacity>
             </View>
         </View>
@@ -61,11 +60,19 @@ const styles = StyleSheet.create({
     userText: {
         color: WHITE,
         textTransform: 'uppercase',
-        marginLeft: 10
+        marginLeft: 10,
+        marginRight: 10,
     },
     avatar: {
         width: 40,
         height: 40,
+    },
+    exit: {
+        borderWidth: 1,
+        width: 40,
+        height: 40,
+        borderColor: LIGHT_GRAY,
+        borderRadius: 50
     }
 });
 

@@ -8,24 +8,28 @@ import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import MoviesScreen from './screens/MoviesScreen';
 import AuthProvider from './Hooks/useFirebase';
+import MoviesProvider from './Hooks/useMovies';
+import { LogBox } from 'react-native';
 
 const Stack = createNativeStackNavigator();
-
+LogBox.ignoreLogs(["timer"]);
 function App() {
   return (
     <>
       <AuthProvider>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{
-            headerShown: false
-          }}>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Movies" component={MoviesScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <Toast />
+        <MoviesProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{
+              headerShown: false
+            }}>
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Register" component={RegisterScreen} />
+              <Stack.Screen name="Movies" component={MoviesScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+          <Toast />
+        </MoviesProvider>
       </AuthProvider>
     </>
   );
