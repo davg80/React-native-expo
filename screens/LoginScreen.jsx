@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED, WHITE } from '../Constantes';
 import Toast from 'react-native-toast-message';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "@firebase/firestore";
 import { useFirebase } from '../Hooks/useFirebase';
-
-const RED = "#f92045";
-const WHITE = "#F1F1F1";
-const LIGHT_GRAY = "#D3D3D3";
-
 
 const image = {
     uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/t9JGg10CW1DzXEdWL54ewkUko6N.jpg"
@@ -30,15 +26,15 @@ const LoginScreen = ({ navigation }) => {
                     if (currentUser.exists()) {
                         console.log("Document data:", currentUser.data());
                         setUser(currentUser.data());
+                        Toast.show({
+                            type: 'success',
+                            text2: `Bienvenue ${user.lastname} ${user.firstname} et bonne visite!! 👋`
+                        });
+                        navigation.navigate('Movies')
                     } else {
                         console.log("No such document!");
                     }
                 })
-                Toast.show({
-                    type: 'success',
-                    text2: `Bienvenue ${user.lastname} ${user.firstname} et bonne visite!! 👋`
-                });
-                navigation.navigate('Movies')
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -52,14 +48,15 @@ const LoginScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        <View style={{ flex: 1 }}>
+            <ImageBackground source={image} resizeMode="contain" style={styles.image}>
                 <View style={styles.boxCard}>
                     <View style={[styles.card, styles.elevation]}>
                         <Text style={styles.title}>Log in now!</Text>
                         <TextInput
                             style={styles.textInput}
                             placeholder="Enter your email"
+                            placeholderTextColor={GRAY_LIGHT}
                             onChangeText={setEmail}
                             defaultValue={email}
                             keyboardType="email-address"
@@ -70,6 +67,7 @@ const LoginScreen = ({ navigation }) => {
                             selectionColor={RED}
                             secureTextEntry={true}
                             placeholder="Enter your password"
+                            placeholderTextColor={GRAY_LIGHT}
                             onChangeText={setPassword}
                             defaultValue={password}
                         />
@@ -89,6 +87,7 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     title: {
         fontSize: 25,
+        color: GRAY_LIGHT
     },
     button: {
         height: 40,
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     buttonText: {
-        color: "#F1F1F1",
+        color: GRAY_LIGHT,
         fontSize: 15
     },
     textInput: {
@@ -116,6 +115,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         padding: 4,
+        color: GRAY_LIGHT,
         borderBottomColor: "red",
         borderBottomWidth: StyleSheet.hairlineWidth
     },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     card: {
-        backgroundColor: 'white',
+        backgroundColor: BLUE_LIGHT_BG,
         borderRadius: 8,
         opacity: .7,
         paddingVertical: 45,
@@ -134,13 +134,13 @@ const styles = StyleSheet.create({
         width: 300
     },
     elevation: {
-        elevation: 20,
-        shadowColor: '#52006A',
+        elevation: 6,
+        shadowColor: BLUE_LIGHT_BG,
     },
     image: {
         flex: 1,
         justifyContent: "center",
-        width: '100%'
+        backgroundColor: BLUE_BG
     }
 });
 

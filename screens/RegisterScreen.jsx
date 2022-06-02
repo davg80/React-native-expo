@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED, WHITE } from '../Constantes';
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
 import { useFirebase } from '../Hooks/useFirebase.js';
 
-const RED = "#f92045";
-const WHITE = "#F1F1F1";
-const LIGHT_GRAY = "#D3D3D3";
 
 const image = { uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kldfJdqlSVro8yrhaAWnMcAgd0r.jpg" }
 
@@ -19,15 +17,14 @@ const SignUpScreen = ({ navigation }) => {
     const [lastname, setLastname] = useState('');
     const [error, setError] = useState("");
     const { auth, db, user, setUser } = useFirebase();
-
     const submit = () => {
-
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in 
-                user = userCredential.user;
+                newUser = userCredential.user;
+                console.log("User" + newUser);
                 // Register data
-                setDoc(doc(db, "users", email), {
+                setDoc(doc(db, "users", email.toLowerCase()), {
                     email: email.toLowerCase(),
                     firstname: firstname,
                     lastname: lastname
@@ -51,7 +48,7 @@ const SignUpScreen = ({ navigation }) => {
     }
     //console.log(auth);
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 1 }}>
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 <View style={styles.boxCard}>
                     <View style={[styles.card, styles.elevation]}>
@@ -60,6 +57,7 @@ const SignUpScreen = ({ navigation }) => {
                             style={styles.textInput}
                             placeholder="Enter your email"
                             onChangeText={setEmail}
+                            placeholderTextColor={GRAY_LIGHT}
                             defaultValue={email}
                             keyboardType="email-address"
                         />
@@ -68,6 +66,7 @@ const SignUpScreen = ({ navigation }) => {
                             style={styles.textInput}
                             placeholder="Enter your password"
                             onChangeText={setPassword}
+                            placeholderTextColor={GRAY_LIGHT}
                             secureTextEntry={true}
                             defaultValue={password}
                         />
@@ -76,6 +75,7 @@ const SignUpScreen = ({ navigation }) => {
                             style={styles.textInput}
                             placeholder="Enter your firstname"
                             onChangeText={setFirstname}
+                            placeholderTextColor={GRAY_LIGHT}
                             defaultValue={firstname}
                         />
                         {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
@@ -83,6 +83,7 @@ const SignUpScreen = ({ navigation }) => {
                             style={styles.textInput}
                             placeholder="Enter your lastname"
                             onChangeText={setLastname}
+                            placeholderTextColor={GRAY_LIGHT}
                             defaultValue={lastname}
                         />
                         {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
@@ -101,23 +102,23 @@ const SignUpScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     title: {
         fontSize: 25,
+        color: GRAY_LIGHT
     },
     button: {
         height: 40,
         margin: 12,
-        borderWidth: 1,
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 20,
         paddingRight: 20,
         borderRadius: 15,
-        backgroundColor: "#f92045",
+        backgroundColor: RED,
         elevation: 4,
         borderWidth: 0,
         textAlign: "center"
     },
     buttonText: {
-        color: "#F1F1F1",
+        color: GRAY_LIGHT,
         fontSize: 15
     },
     textInput: {
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         padding: 4,
+        color: GRAY_LIGHT,
         borderBottomColor: "red",
         borderBottomWidth: StyleSheet.hairlineWidth
     },
@@ -138,22 +140,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     card: {
-        backgroundColor: 'white',
-        opacity: .7,
+        backgroundColor: BLUE_LIGHT_BG,
         borderRadius: 8,
+        opacity: .7,
         paddingVertical: 45,
         paddingHorizontal: 25,
         marginVertical: 10,
         width: 300
     },
     elevation: {
-        elevation: 20,
-        shadowColor: '#52006A',
+        elevation: 6,
+        shadowColor: BLUE_LIGHT_BG,
     },
     image: {
         flex: 1,
         justifyContent: "center",
-        width: '100%'
+        backgroundColor: BLUE_BG
     }
 });
 

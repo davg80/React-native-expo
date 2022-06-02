@@ -1,29 +1,46 @@
 import React from 'react';
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'react-native';
+import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED } from '../Constantes';
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+
 const image = {
     uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/9j21DXo7Gwtfxj81iC20AbOqumt.jpg"
 }
-const RED = "#f92045";
-const WHITE = "#F1F1F1";
-const LIGHT_GRAY = "#D3D3D3";
+
 const HomeScreen = ({ navigation }) => {
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', textAlign: "center" }}>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                <View>
-                    <Text style={styles.title}>Get amazing movie & Tv shows with new movies on demand app</Text>
+        <View style={{ flex: 1 }}>
+            <StatusBar backgroundColor={RED} animated={true} />
+            <ImageBackground resizeMode="contain" style={styles.image}>
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <Image
+                        resizeMode="contain"
+                        source={image}
+                        style={styles.posterHome}
+                    />
                 </View>
-                <View style={styles.container}>
-                    <TouchableOpacity>
-                        <View style={styles.button}>
-                            <Text style={styles.buttonText} onPress={() => navigation.navigate('Login')}> Go to Login</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.button}>
-                            <Text style={styles.buttonText} onPress={() => navigation.navigate('Register')}>Go to Register</Text>
-                        </View>
-                    </TouchableOpacity>
+                <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center', textAlign: "center" }}>
+                    <View style={styles.container}>
+                        <Text style={styles.title}>Get amazing movie & Tv shows with new movies on demand app...
+                            Join us!!</Text>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', textAlign: "center" }}>
+                                <AntDesign name="login" size={45} color="white" />
+                                <Text style={styles.buttonText} > Go to Login</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', textAlign: "center" }}>
+                                <FontAwesome name="registered" size={45} color="white" />
+                                <Text style={styles.buttonText}>Go to Register</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </ImageBackground>
         </View>
@@ -32,42 +49,53 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     button: {
-        height: 40,
+        height: 120,
         margin: 12,
         borderWidth: 1,
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 20,
         paddingRight: 20,
-        borderRadius: 15,
-        backgroundColor: "#f92045",
-        elevation: 4,
+        borderRadius: 10,
+        backgroundColor: BLUE_LIGHT_BG,
+        elevation: 5,
         borderWidth: 0,
+        textAlign: 'center'
+    },
+    posterHome: {
+        flex: 1,
+        width: 350,
+        marginTop: 20,
+        borderRadius: 15
     },
     buttonText: {
-        color: "#F1F1F1",
+        color: GRAY_LIGHT,
     },
     title: {
         textAlign: "center",
-        color: WHITE,
+        width: 350,
+        color: GRAY_LIGHT,
         fontWeight: 'bold',
         fontSize: 22,
-        backgroundColor: RED,
+        backgroundColor: BLUE_LIGHT_BG,
+        elevation: 5,
         paddingTop: 10,
         paddingBottom: 10,
-        marginLeft: 20,
-        marginRight: 20,
+        borderRadius: 10,
+        padding: 15
     },
     container: {
-        width: 450,
+        flex: 1,
         display: 'flex',
+        marginTop: 15,
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "center",
     },
     image: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: BLUE_BG
     },
     logo: {
         width: 150,

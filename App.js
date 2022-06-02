@@ -7,6 +7,7 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import MoviesScreen from './screens/MoviesScreen';
+import DetailsScreen from './screens/DetailsScreen';
 import AuthProvider from './Hooks/useFirebase';
 import MoviesProvider from './Hooks/useMovies';
 import { LogBox } from 'react-native';
@@ -26,6 +27,7 @@ function App() {
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Register" component={RegisterScreen} />
               <Stack.Screen name="Movies" component={MoviesScreen} />
+              <Stack.Screen name="Details" component={DetailsScreen} />
             </Stack.Navigator>
           </NavigationContainer>
           <Toast />

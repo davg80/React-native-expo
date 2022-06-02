@@ -3,10 +3,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useFirebase } from '../Hooks/useFirebase';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
+import { AntDesign } from '@expo/vector-icons';
+import { GRAY_LIGHT, BLUE_BG, WHITE } from '../Constantes';
 
-const RED = "#f92045";
-const WHITE = "#F1F1F1";
-const LIGHT_GRAY = "#D3D3D3";
 const HeaderComponent = ({ user }) => {
     const { auth, signOut } = useFirebase();
     const navigation = useNavigation();
@@ -26,22 +25,17 @@ const HeaderComponent = ({ user }) => {
         })
     }
     return (
-        <View style={styles.containerMovies}>
+        <View style={styles.header}>
             <View style={styles.boxUsername}>
                 <View>
-                    <Image
-                        style={styles.avatar}
-                        source={require('../assets/images/avatar.png')}
-                    />
+                    <AntDesign name="user" size={24} color="white" />
                 </View>
                 <View>
                     {user !== null && <Text style={styles.userText}>Bonjour {user.firstname} {user.lastname}</Text>}
                 </View>
-                <TouchableOpacity onPress={logout}>
-                    <Image
-                        style={styles.exit}
-                        source={require('../assets/images/exit.png')}
-                    />
+                <TouchableOpacity style={styles.button} onPress={logout}>
+                    <AntDesign name="disconnect" size={24} color="white" />
+                    <Text style={styles.textlogout}>Logout</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -49,16 +43,19 @@ const HeaderComponent = ({ user }) => {
 }
 
 const styles = StyleSheet.create({
+    header: {
+        flex: 1,
+        justifyContent: 'space-around',
+    },
     boxUsername: {
-        backgroundColor: RED,
+        backgroundColor: BLUE_BG,
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: 'center',
         padding: 10
     },
     userText: {
-        color: WHITE,
+        color: GRAY_LIGHT,
         textTransform: 'uppercase',
         marginLeft: 10,
         marginRight: 10,
@@ -71,8 +68,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         width: 40,
         height: 40,
-        borderColor: LIGHT_GRAY,
+        borderColor: GRAY_LIGHT,
         borderRadius: 50
+    },
+    textlogout: {
+        color: GRAY_LIGHT,
+        marginLeft: 5
+    },
+    button: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10
     }
 });
 

@@ -1,37 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import HeaderComponent from '../components/HeaderComponent';
+import axios from 'axios';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED } from '../Constantes';
 import { useFirebase } from '../Hooks/useFirebase';
 import { useMovies } from '../Hooks/useMovies';
 
-const HomeScreen = ({ navigation }) => {
+const DetailsScreen = ({ route, navigation }) => {
     const BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w200";
     const { user } = useFirebase();
-    const { movies } = useMovies();
+    const { itemId, otherParam } = route.params;
+    const [movie, setMovie] = useState({});
     //console.log(movies);
+
+    useEffect(() => {
+        axios
+            .get(`https://api.themoviedb.org/3/movie/${itemId}?api_key=81c613b4c91f91a2ae895c2693e7c8b0&language=fr-FR`)
+            .then((response) => {
+                console.log(response.data);
+                setMovie(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [])
+
+
     return (
         <View style={styles.containerMovies}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <HeaderComponent user={user}></HeaderComponent>
-                {
-                    movies.map((movie) => {
-                        return (
-                            <View key={movie.id} style={styles.cardMovie} >
-                                <Image
-                                    resizeMode="contain"
-                                    source={{ uri: `${BASE_URL_IMAGE}${movie.poster_path}` }}
-                                    style={styles.poster}
-                                />
-                                <TouchableOpacity onPress={() => navigation.push('Details', { itemId: movie.id })}>
-                                    <View style={styles.button} >
-                                        <Text style={styles.buttonText}>Voir plus</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        );
-                    })
-                }
+                <View style={styles.cardMovie} >
+                    <Image
+                        resizeMode="contain"
+                        source={{ uri: `${BASE_URL_IMAGE}${movie.poster_path}` }}
+                        style={styles.poster}
+                    />
+                    <Text style={styles.cardTitle}>{movie.original_title}</Text>
+                    <Text style={styles.cardOverview}>{movie.overview}</Text>
+                </View>
             </ScrollView >
         </View >
     );
@@ -93,4 +100,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeScreen;
+export default DetailsScreen;
