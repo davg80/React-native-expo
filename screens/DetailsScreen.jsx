@@ -17,7 +17,7 @@ const DetailsScreen = ({ route, navigation }) => {
         axios
             .get(`https://api.themoviedb.org/3/movie/${itemId}?api_key=81c613b4c91f91a2ae895c2693e7c8b0&language=fr-FR`)
             .then((response) => {
-                console.log(response.data);
+                //console.log(response.data);
                 setMovie(response.data);
             })
             .catch((error) => {

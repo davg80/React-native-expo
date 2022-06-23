@@ -1,84 +1,70 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED, WHITE } from '../Constantes';
+import { doc, setDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "@firebase/firestore";
-import { useFirebase } from '../Hooks/useFirebase';
-import { storeData } from '../components/Helpers/functions';
+import { useFirebase } from '../Hooks/useFirebase.js';
 
-const image = {
-    uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/t9JGg10CW1DzXEdWL54ewkUko6N.jpg"
-}
+const image = { uri: `https://www.themoviedb.org/t/p/w1280/555u92RGJOrQnWAxXxcUGZouREu.jpg` };
 
-const LoginScreen = ({ navigation }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const FormScreen = ({ navigation }) => {
+    const { db, user } = useFirebase();
+    const [description, setDescription] = useState('');
+    const [title, setTitle] = useState('');
     const [error, setError] = useState("");
-
-    const { auth, db, user, setUser } = useFirebase();
-
     const submit = async () => {
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in 
-                const newUser = userCredential.user;
-                const token = newUser.stsTokenManager.accessToken;
-                // Read data
-                getDoc(doc(db, "users", newUser.email.toLowerCase())).then(currentUser => {
-                    if (currentUser.exists() && token) {
-                        storeData(token);
-                        console.log("Document data:", currentUser.data());
-                        setUser(currentUser.data());
-                        Toast.show({
-                            type: 'success',
-                            text2: `Bienvenue ${currentUser.data().lastname} ${currentUser.data().firstname} et bonne visite!! 👋`
-                        });
-                        navigation.navigate('Movies')
-                    } else {
-                        console.log("No such document!");
-                    }
-                })
-            })
-            .catch((error) => {
+        if (title !== "" && description !== "") {
+            try {
+                // Add a new document in collection "posts"
+                await setDoc(doc(db, "posts", title), {
+                    title: title,
+                    description: description,
+                    user: user
+                });
+                Toast.show({
+                    type: 'success',
+                    text2: 'Votre post a été ajouté avec succés! 👋'
+                });
+                navigation.navigate('ListPosts');
+            } catch (error) {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                console.log(error.code);
                 setError(error.message);
                 Toast.show({
                     type: 'error',
-                    text2: 'Une erreur est survenue👋'
+                    text2: `Une erreur est survenue lors de l'ajout du post👋`
                 });
-            });
+            }
+        }
     }
 
     return (
         <View style={{ flex: 1 }}>
-            <ImageBackground source={image} resizeMode="contain" style={styles.image}>
+            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 <View style={styles.boxCard}>
                     <View style={[styles.card, styles.elevation]}>
-                        <Text style={styles.title}>Log in now!</Text>
+                        <Text style={styles.title}>Ajouter un post</Text>
                         <TextInput
                             style={styles.textInput}
-                            placeholder="Enter your email"
+                            placeholder="Enter your title"
                             placeholderTextColor={GRAY_LIGHT}
-                            onChangeText={setEmail}
-                            defaultValue={email}
-                            keyboardType="email-address"
+                            onChangeText={setTitle}
+                            defaultValue={title}
                         />
                         {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
                         <TextInput
                             style={styles.textInput}
                             selectionColor={RED}
-                            secureTextEntry={true}
-                            placeholder="Enter your password"
+                            placeholder="Enter your description"
                             placeholderTextColor={GRAY_LIGHT}
-                            onChangeText={setPassword}
-                            defaultValue={password}
+                            onChangeText={setDescription}
+                            defaultValue={description}
                         />
                         {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
                         <TouchableOpacity onPress={submit}>
                             <View style={styles.button} >
-                                <Text style={styles.buttonText}> Login</Text>
+                                <Text style={styles.buttonText}>Ajouter un Post</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -148,4 +134,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default LoginScreen;
+export default FormScreen;

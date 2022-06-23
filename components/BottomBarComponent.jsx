@@ -1,39 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useFirebase } from '../Hooks/useFirebase';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import { GRAY_LIGHT, BLUE_BG, WHITE } from '../Constantes';
+import { getData } from './Helpers/functions';
 
-const HeaderComponent = ({ user }) => {
-    const { auth, signOut } = useFirebase();
+const BottomBarComponent = ({ user }) => {
     const navigation = useNavigation();
-
     const logout = () => {
-        console.log("logout header");
-        signOut(auth).then(() => {
-            Toast.show({
-                type: 'success',
-                text2: `À Bientôt ${user.lastname} ${user.firstname} !!`
-            });
-            navigation.navigate('Home');
-        }).catch((error) => {
-            Toast.show({
-                type: 'error',
-                text2: `Une erreur est survenue!!`
-            });
-        })
+        console.log("logout");
+        getData(navigation);
     }
+
     return (
-        <View style={styles.header}>
-            <View style={styles.boxUsername}>
-                <View>
-                    <AntDesign name="user" size={24} color="white" />
-                </View>
-                <View>
-                    {user !== null && <Text style={styles.userText}>Bonjour {user.firstname} {user.lastname}</Text>}
-                </View>
+        <View style={styles.bottomBar}>
+            <View style={styles.boxButtons}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Movies')}>
+                    <AntDesign name="home" size={24} color="white" />
+                    <Text style={styles.textlogout}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Form')}>
+                    <AntDesign name="plus" size={24} color="white" />
+                    <Text style={styles.textlogout}>Form</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ListPosts')}>
+                    <AntDesign name="picture" size={24} color="white" />
+                    <Text style={styles.textlogout}>MyPosts</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={logout}>
                     <AntDesign name="disconnect" size={24} color="white" />
                     <Text style={styles.textlogout}>Logout</Text>
@@ -44,11 +38,12 @@ const HeaderComponent = ({ user }) => {
 }
 
 const styles = StyleSheet.create({
-    header: {
-        flex: 1,
-        justifyContent: 'space-around',
+    bottomBar: {
+        width: 400,
+        position: 'absolute',
+        bottom: 0
     },
-    boxUsername: {
+    boxButtons: {
         backgroundColor: BLUE_BG,
         flexDirection: 'row',
         justifyContent: 'center',
@@ -84,4 +79,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default HeaderComponent;
+export default BottomBarComponent;

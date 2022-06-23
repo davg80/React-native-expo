@@ -5,11 +5,13 @@ import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED } from '../Constantes';
 import { useFirebase } from '../Hooks/useFirebase';
 import { useMovies } from '../Hooks/useMovies';
 
+
 const HomeScreen = ({ navigation }) => {
     const BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w200";
     const { user } = useFirebase();
     const { movies } = useMovies();
     //console.log(movies);
+
     return (
         <View style={styles.containerMovies}>
             <ScrollView showsVerticalScrollIndicator={false}>
