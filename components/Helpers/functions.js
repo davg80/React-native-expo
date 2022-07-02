@@ -18,5 +18,6 @@ export const storeData = async (value) => {
         await AsyncStorage.setItem('@storage_Key', value)
     } catch (e) {
         // saving error
+        console.log(e);
     }
 }

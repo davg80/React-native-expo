@@ -10,9 +10,11 @@ import MoviesScreen from './screens/MoviesScreen';
 import DetailsScreen from './screens/DetailsScreen';
 import AuthProvider from './Hooks/useFirebase';
 import MoviesProvider from './Hooks/useMovies';
+import PostsProvider from './Hooks/usePosts';
 import FormScreen from './screens/FormScreen';
 import ListPostScreen from './screens/ListPostScreen';
-import BottomBarComponent from './components/BottomBarComponent';
+import PostScreen from './screens/PostScreen';
+import EditPostScreen from './screens/EditPostScreen';
 import { LogBox } from 'react-native';
 
 
@@ -25,21 +27,24 @@ function App() {
     <>
       <AuthProvider>
         <MoviesProvider>
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{
-              headerShown: false
-            }}>
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen name="Details" component={DetailsScreen} />
-              <Stack.Screen name="Movies" component={MoviesScreen} />
-              <Stack.Screen name="Form" component={FormScreen} />
-              <Stack.Screen name="ListPosts" component={ListPostScreen} />
-            </Stack.Navigator>
-            <BottomBarComponent />
-          </NavigationContainer>
-          <Toast />
+          <PostsProvider>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{
+                headerShown: false
+              }}>
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Register" component={RegisterScreen} />
+                <Stack.Screen name="Details" component={DetailsScreen} />
+                <Stack.Screen name="Movies" component={MoviesScreen} />
+                <Stack.Screen name="Form" component={FormScreen} />
+                <Stack.Screen name="ListPosts" component={ListPostScreen} />
+                <Stack.Screen name="Post" component={PostScreen} />
+                <Stack.Screen name="EditPost" component={EditPostScreen} />
+              </Stack.Navigator>
+            </NavigationContainer>
+            <Toast />
+          </PostsProvider>
         </MoviesProvider>
       </AuthProvider>
     </>

@@ -25,6 +25,7 @@ const HeaderComponent = ({ user }) => {
             });
         })
     }
+
     return (
         <View style={styles.header}>
             <View style={styles.boxUsername}>

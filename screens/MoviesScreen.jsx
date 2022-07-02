@@ -4,6 +4,7 @@ import HeaderComponent from '../components/HeaderComponent';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED } from '../Constantes';
 import { useFirebase } from '../Hooks/useFirebase';
 import { useMovies } from '../Hooks/useMovies';
+import BottomBarComponent from '../components/BottomBarComponent';
 
 
 const HomeScreen = ({ navigation }) => {
@@ -35,6 +36,7 @@ const HomeScreen = ({ navigation }) => {
                     })
                 }
             </ScrollView >
+            <BottomBarComponent />
         </View >
     );
 }
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: GRAY_LIGHT,
         fontSize: 15
-    },
+    }
 });
 
 export default HomeScreen;

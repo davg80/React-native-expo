@@ -39,9 +39,10 @@ const BottomBarComponent = ({ user }) => {
 
 const styles = StyleSheet.create({
     bottomBar: {
-        width: 400,
+        width: 420,
         position: 'absolute',
-        bottom: 0
+        bottom: 0,
+        marginTop: 40
     },
     boxButtons: {
         backgroundColor: BLUE_BG,

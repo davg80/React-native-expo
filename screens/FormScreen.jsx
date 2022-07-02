@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
-import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED, WHITE } from '../Constantes';
-import { doc, setDoc } from "firebase/firestore";
+import { doc, Firestore, setDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
 import { useFirebase } from '../Hooks/useFirebase.js';
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import * as ImagePicker from 'expo-image-picker';
+import BottomBarComponent from '../components/BottomBarComponent';
 
-const image = { uri: `https://www.themoviedb.org/t/p/w1280/555u92RGJOrQnWAxXxcUGZouREu.jpg` };
+const imageBg = { uri: `https://www.themoviedb.org/t/p/w1280/555u92RGJOrQnWAxXxcUGZouREu.jpg` };
 
 const FormScreen = ({ navigation }) => {
     const { db, user } = useFirebase();
     const [description, setDescription] = useState('');
     const [title, setTitle] = useState('');
     const [error, setError] = useState("");
+    // Image upload
+    const [image, setImage] = useState(null);
+
     const submit = async () => {
         if (title !== "" && description !== "") {
             try {
@@ -19,13 +25,15 @@ const FormScreen = ({ navigation }) => {
                 await setDoc(doc(db, "posts", title), {
                     title: title,
                     description: description,
-                    user: user
+                    author: user,
+                    like: false,
+                    comments: []
                 });
                 Toast.show({
                     type: 'success',
                     text2: 'Votre post a été ajouté avec succés! 👋'
                 });
-                navigation.navigate('ListPosts');
+                navigation.navigate('Movies');
             } catch (error) {
                 const errorCode = error.code;
                 const errorMessage = error.message;
@@ -39,12 +47,63 @@ const FormScreen = ({ navigation }) => {
         }
     }
 
+    useEffect(async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Toast.error(`Permission denied!`);
+        }
+    }, [])
+
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            setImage(result.uri);
+            const storage = getStorage();
+            const storageRef = ref(storage, 'images/image.jpg');
+            const uploadTask = uploadBytesResumable(storageRef, image);
+            uploadTask.on(
+                "state_changed", (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log("Upload is " + progress + "% done");
+                }), (error) => {
+                    console.log(error);
+                },
+                () => {
+                    getDownloadUrl(uploadTask.snapshot.ref).then((url) => {
+                        console.log("File available url" + url);
+                        let tempurls = [...url];
+                        uploadPhotos(i + 1, faceUrl, profilePicture, tempurls)
+                    })
+                };
+        }
+    };
+
     return (
         <View style={{ flex: 1 }}>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+            <ImageBackground source={imageBg} resizeMode="cover" style={styles.image}>
                 <View style={styles.boxCard}>
                     <View style={[styles.card, styles.elevation]}>
                         <Text style={styles.title}>Ajouter un post</Text>
+                        {image && < View style={styles.boxImage}>
+                            <Image source={{ uri: image }} style={styles.imageUpload} />
+                        </View>}
+                        <View style={styles.containerUpload}>
+                            <TouchableOpacity onPress={pickImage}>
+                                <View style={styles.button} >
+                                    <Text style={styles.buttonText}>Choose Picture</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                         <TextInput
                             style={styles.textInput}
                             placeholder="Enter your title"
@@ -70,13 +129,16 @@ const FormScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ImageBackground>
+            <BottomBarComponent />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     title: {
+        textAlign: 'center',
         fontSize: 25,
+        marginBottom: 20,
         color: GRAY_LIGHT
     },
     button: {
@@ -131,6 +193,20 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         backgroundColor: BLUE_BG
+    },
+    boxImage: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    imageUpload: {
+        width: 100,
+        height: 100,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    containerUpload: {
+        flexDirection: 'row',
+        justifyContent: 'center'
     }
 });
 

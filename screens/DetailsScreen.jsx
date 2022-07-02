@@ -4,7 +4,8 @@ import HeaderComponent from '../components/HeaderComponent';
 import axios from 'axios';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED } from '../Constantes';
 import { useFirebase } from '../Hooks/useFirebase';
-import { useMovies } from '../Hooks/useMovies';
+import BottomBarComponent from '../components/BottomBarComponent';
+
 
 const DetailsScreen = ({ route, navigation }) => {
     const BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w200";
@@ -40,6 +41,7 @@ const DetailsScreen = ({ route, navigation }) => {
                     <Text style={styles.cardOverview}>{movie.overview}</Text>
                 </View>
             </ScrollView >
+            <BottomBarComponent />
         </View >
     );
 }
