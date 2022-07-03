@@ -1,8 +1,7 @@
 import React from 'react';
 import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'react-native';
 import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED } from '../Constantes';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 const image = {
     uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/9j21DXo7Gwtfxj81iC20AbOqumt.jpg"
@@ -30,13 +29,13 @@ const HomeScreen = ({ navigation }) => {
                             Join us!!</Text>
                         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', textAlign: "center" }}>
-                                <AntDesign name="login" size={45} color="white" />
+                                <Entypo name="login" size={24} color="white" />
                                 <Text style={styles.buttonText} > Go to Login</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', textAlign: "center" }}>
-                                <FontAwesome name="registered" size={45} color="white" />
+                                <Entypo name="circle-with-plus" size={24} color="white" />
                                 <Text style={styles.buttonText}>Go to Register</Text>
                             </View>
                         </TouchableOpacity>

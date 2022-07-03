@@ -26,7 +26,7 @@ const ListPostScreen = ({ navigation }) => {
         getPosts();
     }, [])
 
-    console.log(posts);
+    // console.log(posts);
     return (
         <View style={styles.containerPosts}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -34,14 +34,34 @@ const ListPostScreen = ({ navigation }) => {
                 {
                     posts.map((post, index) => {
                         return (
-                            <View style={styles.cardPosts} key={index}>
-                                <Text style={styles.titlePost}>{post.title}</Text>
-                                <Text style={styles.descriptionPost}>{post.description}</Text>
-                                <TouchableOpacity onPress={() => navigation.push('Post', { itemId: post.title })}>
-                                    <View style={styles.button} >
-                                        <Text style={styles.buttonText}>Voir plus</Text>
-                                    </View>
-                                </TouchableOpacity>
+                            <View style={styles.containerPostAndComments} key={index}>
+                                <View style={styles.cardPosts} >
+                                    <Text style={styles.titlePost}>{post.title}</Text>
+                                    <Text style={styles.descriptionPost}>{post.description}</Text>
+                                    <TouchableOpacity onPress={() => navigation.push('Post', { itemId: post.title })}>
+                                        <View style={styles.button} >
+                                            <Text style={styles.buttonText}>Voir plus</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View >
+                                    {post.comments.length <= 0 ?
+                                        <Text style={styles.text}>Aucun commentaire pour le moment...</Text>
+                                        :
+                                        <View>
+                                            <Text style={styles.titleComment}>Les derniers commentaires:</Text>
+                                            {post.comments &&
+                                                post.comments.slice(-3).map((comment, index) => {
+                                                    return (
+                                                        <View key={index}>
+                                                            <Text style={styles.comment}>{comment}</Text>
+                                                        </View>
+                                                    )
+                                                })
+                                            }
+                                        </View>
+                                    }
+                                </View>
                             </View>
                         )
                     })
@@ -57,6 +77,28 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: BLUE_BG
     },
+    containerPostAndComments: {
+        flex: 1,
+        borderRadius: 15,
+        backgroundColor: 'white',
+        marginBottom: 45,
+        marginTop: 22,
+        padding: 30,
+    },
+    titlePost: {
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    titleComment: {
+        fontWeight: 'bold'
+    },
+    comment: {
+        width: 380,
+        backgroundColor: GRAY_LIGHT,
+        padding: 10,
+        marginBottom: 10,
+    },
     cardPosts: {
         flex: 1,
         borderRadius: 15,
@@ -66,9 +108,6 @@ const styles = StyleSheet.create({
         marginBottom: 45,
         marginTop: 22,
         padding: 30,
-    },
-    titlePost: {
-        color: WHITE
     },
     descriptionPost: {
         color: WHITE,
@@ -89,7 +128,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: GRAY_LIGHT,
         fontSize: 15
-    }
+    },
+
 });
 
 export default ListPostScreen;

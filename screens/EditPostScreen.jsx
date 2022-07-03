@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity, Modal, Alert, TextInput } from 'react-native';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED, WHITE, OUTER_SPACE } from '../Constantes';
-import { Entypo } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { deleteDoc, doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import BottomBarComponent from '../components/BottomBarComponent';
@@ -13,14 +11,12 @@ const EditPostScreen = ({ route, navigation }) => {
     const { db, user } = useFirebase();
     const { itemId } = route.params;
     const [description, setDescription] = useState('');
-    const [title, setTitle] = useState('');
     const [error, setError] = useState("");
     const [post, setPost] = useState([]);
     const getPost = async () => {
         const querySnapshot = await getDoc(doc(db, "posts", itemId));
         if (querySnapshot.exists()) {
             setPost(querySnapshot.data());
-            setTitle(querySnapshot.data().title)
             setDescription(querySnapshot.data().description)
         } else {
             Toast.show({
@@ -34,11 +30,11 @@ const EditPostScreen = ({ route, navigation }) => {
     }, [])
 
     const submit = async () => {
-        if (title !== "" && description !== "") {
+        if (description !== "") {
             try {
                 // Add a new document in collection "posts"
-                await setDoc(doc(db, "posts", title), {
-                    title: title,
+                await setDoc(doc(db, "posts", itemId), {
+                    title: post.title,
                     description: description,
                     author: user,
                     like: post.like,
@@ -48,7 +44,7 @@ const EditPostScreen = ({ route, navigation }) => {
                     type: 'success',
                     text2: 'Votre post a été modifié avec succés! 👋'
                 });
-                navigation.navigate('Movies');
+                navigation.navigate('ListPosts');
             } catch (error) {
                 const errorCode = error.code;
                 const errorMessage = error.message;
@@ -67,26 +63,22 @@ const EditPostScreen = ({ route, navigation }) => {
                 <HeaderComponent user={user}></HeaderComponent>
                 <View style={styles.cardEditPost}>
                     <Text style={styles.title}>Modification</Text>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="Enter your title"
-                        placeholderTextColor={GRAY_LIGHT}
-                        onChangeText={setTitle}
-                        defaultValue={title}
-                    />
-                    {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
-                    <TextInput
-                        style={styles.textInput}
-                        selectionColor={RED}
-                        placeholder="Enter your description"
-                        placeholderTextColor={GRAY_LIGHT}
-                        onChangeText={setDescription}
-                        defaultValue={description}
-                    />
+                    <View style={styles.textAreaContainer} >
+                        <TextInput
+                            style={styles.textArea}
+                            multiline={true}
+                            numberOfLines={4}
+                            selectionColor={RED}
+                            placeholder="Enter your description"
+                            placeholderTextColor={GRAY_LIGHT}
+                            onChangeText={setDescription}
+                            defaultValue={description}
+                        />
+                    </View>
                     {error !== "" && <Text style={{ fontSize: 9, color: RED }}>{error}</Text>}
                     <TouchableOpacity onPress={submit}>
                         <View style={styles.button} >
-                            <Text style={styles.buttonText}>Modifier votre Post</Text>
+                            <Text style={styles.buttonText}>Modifier votre synopsis</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -127,6 +119,15 @@ const styles = StyleSheet.create({
         color: OUTER_SPACE,
         borderBottomColor: "red",
         borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    textAreaContainer: {
+        borderColor: GRAY_LIGHT,
+        borderWidth: 1,
+        padding: 5
+    },
+    textArea: {
+        height: 150,
+        justifyContent: "flex-start"
     },
     title: {
         textAlign: 'center',

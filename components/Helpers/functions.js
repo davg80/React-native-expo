@@ -9,7 +9,7 @@ export const getData = async (navigation) => {
         }
     } catch (e) {
         // error reading value
-        console.log(e, "Problème de redirection TOKEN");
+        // console.log(e, "Problème de redirection TOKEN");
     }
 }
 
@@ -18,6 +18,6 @@ export const storeData = async (value) => {
         await AsyncStorage.setItem('@storage_Key', value)
     } catch (e) {
         // saving error
-        console.log(e);
+        // console.log(e);
     }
 }

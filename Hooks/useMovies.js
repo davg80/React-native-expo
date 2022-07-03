@@ -10,7 +10,7 @@ export const useMovies = () => useContext(MoviesContext);
 
 function MoviesProvider({ children }) {
   const [movies, setMovies] = useState([]);
-  console.log("----------------MOVIES---------------------");
+  // console.log("----------------MOVIES---------------------");
   useEffect(() => {
     axios
       .get("https://api.themoviedb.org/3/movie/popular?api_key=81c613b4c91f91a2ae895c2693e7c8b0&language=fr-FR&page=1")

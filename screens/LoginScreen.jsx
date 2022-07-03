@@ -28,7 +28,7 @@ const LoginScreen = ({ navigation }) => {
                 getDoc(doc(db, "users", newUser.email.toLowerCase())).then(currentUser => {
                     if (currentUser.exists() && token) {
                         storeData(token);
-                        console.log("Document data:", currentUser.data());
+                        // console.log("Document data:", currentUser.data());
                         setUser(currentUser.data());
                         Toast.show({
                             type: 'success',
@@ -37,6 +37,10 @@ const LoginScreen = ({ navigation }) => {
                         navigation.navigate('Movies')
                     } else {
                         console.log("No such document!");
+                        Toast.show({
+                            type: 'error',
+                            text2: `Erreur de chargement...👋`
+                        });
                     }
                 })
             })

@@ -22,7 +22,7 @@ const SignUpScreen = ({ navigation }) => {
             .then((userCredential) => {
                 // Signed in 
                 newUser = userCredential.user;
-                console.log("User" + newUser);
+                // console.log("User" + newUser);
                 // Register data
                 setDoc(doc(db, "users", email.toLowerCase()), {
                     email: email.toLowerCase(),

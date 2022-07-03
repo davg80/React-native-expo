@@ -9,13 +9,13 @@ function PostsProvider({ children }) {
     const { db } = useFirebase();
     const [posts, setPosts] = useState([])
     let tmpArray = [];
-    console.log("------------------POSTS----------------------");
+    // console.log("------------------POSTS----------------------");
     useEffect(() => {
         const getPosts = async () => {
             const querySnapshot = await getDocs(collection(db, "posts"));
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
                 tmpArray.push(doc.data());
             });
             setPosts(tmpArray);

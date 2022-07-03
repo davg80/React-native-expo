@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useFirebase } from '../Hooks/useFirebase';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { GRAY_LIGHT, BLUE_BG, WHITE } from '../Constantes';
 
 const HeaderComponent = ({ user }) => {
@@ -11,7 +11,7 @@ const HeaderComponent = ({ user }) => {
     const navigation = useNavigation();
 
     const logout = () => {
-        console.log("logout header");
+        // console.log("logout header");
         signOut(auth).then(() => {
             Toast.show({
                 type: 'success',
@@ -27,20 +27,20 @@ const HeaderComponent = ({ user }) => {
     }
 
     return (
-        <View style={styles.header}>
+        <View style={styles.header} >
             <View style={styles.boxUsername}>
                 <View>
-                    <AntDesign name="user" size={24} color="white" />
+                    <Entypo name="user" size={18} color="white" />
                 </View>
                 <View>
                     {user !== null && <Text style={styles.userText}>Bonjour {user.firstname} {user.lastname}</Text>}
                 </View>
                 <TouchableOpacity style={styles.button} onPress={logout}>
-                    <AntDesign name="disconnect" size={24} color="white" />
+                    <Entypo name="log-out" size={18} color="white" />
                     <Text style={styles.textlogout}>Logout</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </View >
     );
 }
 
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     header: {
         flex: 1,
         justifyContent: 'space-around',
+        marginBottom: 25
     },
     boxUsername: {
         backgroundColor: BLUE_BG,

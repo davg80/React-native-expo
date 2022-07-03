@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { GRAY_LIGHT, BLUE_BG, WHITE } from '../Constantes';
 import { getData } from './Helpers/functions';
 
 const BottomBarComponent = ({ user }) => {
     const navigation = useNavigation();
     const logout = () => {
-        console.log("logout");
+        // console.log("logout");
         getData(navigation);
     }
 
@@ -17,19 +17,23 @@ const BottomBarComponent = ({ user }) => {
         <View style={styles.bottomBar}>
             <View style={styles.boxButtons}>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Movies')}>
-                    <AntDesign name="home" size={24} color="white" />
+                    <Entypo name="home" size={18} color="white" />
                     <Text style={styles.textlogout}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Form')}>
-                    <AntDesign name="plus" size={24} color="white" />
+                    <Entypo name="circle-with-plus" size={18} color="white" />
                     <Text style={styles.textlogout}>Form</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ListPosts')}>
-                    <AntDesign name="picture" size={24} color="white" />
+                    <Entypo name="list" size={18} color="white" />
                     <Text style={styles.textlogout}>MyPosts</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')}>
+                    <Entypo name="user" size={18} color="white" />
+                    <Text style={styles.textlogout}>Profile</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={logout}>
-                    <AntDesign name="disconnect" size={24} color="white" />
+                    <Entypo name="log-out" size={18} color="white" />
                     <Text style={styles.textlogout}>Logout</Text>
                 </TouchableOpacity>
             </View>
@@ -55,7 +59,7 @@ const styles = StyleSheet.create({
         color: GRAY_LIGHT,
         textTransform: 'uppercase',
         marginLeft: 10,
-        marginRight: 10,
+        marginRight: 5,
     },
     avatar: {
         width: 40,

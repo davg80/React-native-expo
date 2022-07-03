@@ -80,11 +80,11 @@ const PostScreen = ({ route, navigation }) => {
                     type: 'success',
                     text2: 'Votre commentaire a été ajouté avec succés! 👋'
                 });
-                navigation.navigate('ListPosts');
+                navigation.navigate('Movies');
             } catch (error) {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(error.code);
+                // console.log(error.code);
                 setError(error.message);
                 Toast.show({
                     type: 'error',
@@ -101,7 +101,7 @@ const PostScreen = ({ route, navigation }) => {
                     <HeaderComponent user={user}></HeaderComponent>
                     <View style={styles.cardPost}>
                         <View>
-                            <Text>{post.title}</Text>
+                            <Text style={styles.titlePost}>{post.title}</Text>
                             <Text>{post.description}</Text>
                             <View style={styles.containerIcons} >
                                 {isLike ?
@@ -117,19 +117,17 @@ const PostScreen = ({ route, navigation }) => {
                                         <Text>{countComment}</Text>
                                     </View>
                                 </TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.push('EditPost', { itemId: post.title })}>
+                                    <Text style={styles.icons}>
+                                        <Entypo name="edit" size={26} color="red" />
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => deletePost(post.title)}>
+                                    <Text style={styles.icons} >
+                                        <Entypo name="trash" size={26} color="red" />
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
-                        </View>
-                        <View style={styles.containerIcons}>
-                            <TouchableOpacity onPress={() => navigation.push('EditPost', { itemId: post.title })}>
-                                <Text style={styles.icons}>
-                                    <Entypo name="edit" size={26} color="red" />
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => deletePost(post.title)}>
-                                <Text style={styles.icons} >
-                                    <Entypo name="trash" size={26} color="red" />
-                                </Text>
-                            </TouchableOpacity>
                         </View>
                         <Modal
                             animationType={"slide"}
@@ -189,6 +187,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    titlePost: {
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
     cardPost: {
         flex: 1,
         width: 350,
@@ -201,7 +204,10 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     containerIcons: {
+        marginTop: 15,
+        width: 300,
         flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     icons: {
         marginRight: 10

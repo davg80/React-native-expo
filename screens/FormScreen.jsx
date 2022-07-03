@@ -4,7 +4,6 @@ import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED, WHITE } from '../Constantes';
 import { doc, Firestore, setDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
 import { useFirebase } from '../Hooks/useFirebase.js';
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 import BottomBarComponent from '../components/BottomBarComponent';
 
@@ -15,8 +14,6 @@ const FormScreen = ({ navigation }) => {
     const [description, setDescription] = useState('');
     const [title, setTitle] = useState('');
     const [error, setError] = useState("");
-    // Image upload
-    const [image, setImage] = useState(null);
 
     const submit = async () => {
         if (title !== "" && description !== "") {
@@ -47,18 +44,12 @@ const FormScreen = ({ navigation }) => {
         }
     }
 
-    useEffect(async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            Toast.error(`Permission denied!`);
-        }
-    }, [])
-
+    const [image, setImage] = useState(null);
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
@@ -68,25 +59,9 @@ const FormScreen = ({ navigation }) => {
 
         if (!result.cancelled) {
             setImage(result.uri);
-            const storage = getStorage();
-            const storageRef = ref(storage, 'images/image.jpg');
-            const uploadTask = uploadBytesResumable(storageRef, image);
-            uploadTask.on(
-                "state_changed", (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log("Upload is " + progress + "% done");
-                }), (error) => {
-                    console.log(error);
-                },
-                () => {
-                    getDownloadUrl(uploadTask.snapshot.ref).then((url) => {
-                        console.log("File available url" + url);
-                        let tempurls = [...url];
-                        uploadPhotos(i + 1, faceUrl, profilePicture, tempurls)
-                    })
-                };
         }
     };
+
 
     return (
         <View style={{ flex: 1 }}>
