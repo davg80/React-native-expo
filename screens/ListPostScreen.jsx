@@ -26,7 +26,6 @@ const ListPostScreen = ({ navigation }) => {
         getPosts();
     }, [])
 
-    // console.log(posts);
     return (
         <View style={styles.containerPosts}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     comment: {
-        width: 380,
+        width: 350,
         backgroundColor: GRAY_LIGHT,
         padding: 10,
         marginBottom: 10,

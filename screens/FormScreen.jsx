@@ -5,6 +5,8 @@ import { doc, Firestore, setDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
 import { useFirebase } from '../Hooks/useFirebase.js';
 import * as ImagePicker from 'expo-image-picker';
+import { Entypo } from '@expo/vector-icons';
+import storage from '@react-native-firebase/storage';
 import BottomBarComponent from '../components/BottomBarComponent';
 
 const imageBg = { uri: `https://www.themoviedb.org/t/p/w1280/555u92RGJOrQnWAxXxcUGZouREu.jpg` };
@@ -17,6 +19,8 @@ const FormScreen = ({ navigation }) => {
 
     const submit = async () => {
         if (title !== "" && description !== "") {
+            //Upload Image
+
             try {
                 // Add a new document in collection "posts"
                 await setDoc(doc(db, "posts", title), {
@@ -69,13 +73,13 @@ const FormScreen = ({ navigation }) => {
                 <View style={styles.boxCard}>
                     <View style={[styles.card, styles.elevation]}>
                         <Text style={styles.title}>Ajouter un post</Text>
-                        {image && < View style={styles.boxImage}>
+                        {image !== null && < View style={styles.boxImage}>
                             <Image source={{ uri: image }} style={styles.imageUpload} />
                         </View>}
                         <View style={styles.containerUpload}>
                             <TouchableOpacity onPress={pickImage}>
                                 <View style={styles.button} >
-                                    <Text style={styles.buttonText}>Choose Picture</Text>
+                                    <Text style={styles.buttonText}>   <Entypo name="circle-with-plus" size={18} color="white" />Choose Picture</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
