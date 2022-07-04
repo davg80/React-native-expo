@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import HeaderComponent from '../components/HeaderComponent';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED } from '../Constantes';
 import { useFirebase } from '../Hooks/useFirebase';
@@ -17,6 +17,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.containerMovies}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <HeaderComponent user={user}></HeaderComponent>
+                {movies.length <= 0 && <ActivityIndicator size="small" color={RED} />}
                 {
                     movies.map((movie) => {
                         return (

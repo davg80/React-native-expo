@@ -22,7 +22,6 @@ const EditPostScreen = ({ route, navigation }) => {
         if (querySnapshot.exists()) {
             setPost(querySnapshot.data());
             setDescription(querySnapshot.data().description)
-            setImage(querySnapshot.data().image)
         } else {
             Toast.show({
                 type: 'error',
@@ -101,9 +100,11 @@ const EditPostScreen = ({ route, navigation }) => {
                 <HeaderComponent user={user}></HeaderComponent>
                 <View style={styles.cardEditPost}>
                     <Text style={styles.title}>Modification</Text>
-                    {image !== null && < View style={styles.boxImage}>
-                        <Image source={{ uri: image }} style={styles.imageUpload} />
-                    </View>}
+                    {image !== null &&
+                        < View style={styles.boxImage}>
+                            <Image source={{ uri: image }} style={styles.imageUpload} />
+                        </View>
+                    }
                     <View style={styles.containerUpload}>
                         <TouchableOpacity onPress={pickImage}>
                             <View style={styles.button} >

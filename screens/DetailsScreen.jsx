@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import HeaderComponent from '../components/HeaderComponent';
 import axios from 'axios';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED } from '../Constantes';
@@ -31,14 +31,20 @@ const DetailsScreen = ({ route, navigation }) => {
         <View style={styles.containerMovies}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <HeaderComponent user={user}></HeaderComponent>
-                <View style={styles.cardMovie} >
-                    <Image
-                        resizeMode="contain"
-                        source={{ uri: `${BASE_URL_IMAGE}${movie.poster_path}` }}
-                        style={styles.poster}
-                    />
-                    <Text style={styles.cardTitle}>{movie.original_title}</Text>
-                    <Text style={styles.cardOverview}>{movie.overview}</Text>
+                <View style={styles.cardMovie}>
+                    {!movie.poster_path ?
+                        <ActivityIndicator size="large" color="#FFF" />
+                        :
+                        <>
+                            <Image
+                                resizeMode="contain"
+                                source={{ uri: `${BASE_URL_IMAGE}${movie.poster_path}` }}
+                                style={styles.poster}
+                            />
+                            <Text style={styles.cardTitle}>{movie.original_title}</Text>
+                            <Text style={styles.cardOverview}>{movie.overview}</Text>
+                        </>
+                    }
                 </View>
             </ScrollView >
             <BottomBarComponent />

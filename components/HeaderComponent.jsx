@@ -30,7 +30,15 @@ const HeaderComponent = ({ user }) => {
         <View style={styles.header} >
             <View style={styles.boxUsername}>
                 <View>
-                    <Entypo name="user" size={18} color="white" />
+                    {user.image === null ?
+                        < View style={styles.boxImage}>
+                            <Entypo name="user" size={18} color="white" />
+                        </View>
+                        :
+                        < View style={styles.boxImage}>
+                            <Image source={{ uri: user.image }} style={styles.imageUpload} />
+                        </View>
+                    }
                 </View>
                 <View>
                     {user !== null && <Text style={styles.userText}>Bonjour {user.firstname} {user.lastname}</Text>}
@@ -83,6 +91,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10
+    },
+    boxImage: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    imageUpload: {
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 50
+    },
+    containerUpload: {
+        flexDirection: 'row',
+        justifyContent: 'center'
     }
 });
 

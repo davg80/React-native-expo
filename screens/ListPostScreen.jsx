@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import HeaderComponent from '../components/HeaderComponent';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED, WHITE } from '../Constantes';
 import Toast from 'react-native-toast-message';
@@ -22,7 +22,7 @@ const ListPostScreen = ({ navigation }) => {
         });
         setPosts(tmpArray);
     }
-    useEffect(() => {
+    useEffect(async () => {
         getPosts();
     }, [])
 
@@ -30,7 +30,9 @@ const ListPostScreen = ({ navigation }) => {
         <View style={styles.containerPosts}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <HeaderComponent user={user}></HeaderComponent>
-                {
+                {posts.length <= 0 ?
+                    (<ActivityIndicator size="large" color={RED} />)
+                    :
                     posts.map((post, index) => {
                         return (
                             <View style={styles.containerPostAndComments} key={index}>

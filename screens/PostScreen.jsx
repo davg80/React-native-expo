@@ -102,6 +102,13 @@ const PostScreen = ({ route, navigation }) => {
                     <View style={styles.cardPost}>
                         <View>
                             <Text style={styles.titlePost}>{post.title}</Text>
+                            {post.image &&
+                                <Image
+                                    resizeMode="contain"
+                                    source={{ uri: `${post.image}` }}
+                                    style={styles.poster}
+                                />
+                            }
                             <Text>{post.description}</Text>
                             <View style={styles.containerIcons} >
                                 {isLike ?
@@ -271,5 +278,11 @@ const styles = StyleSheet.create({
         backgroundColor: GRAY_LIGHT,
         padding: 10,
         marginBottom: 10,
-    }
+    },
+    poster: {
+        width: 200,
+        height: 200,
+        borderRadius: 10,
+        marginLeft: 50
+    },
 })

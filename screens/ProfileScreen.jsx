@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, Text, ScrollView, Image, TouchableOpacity, Modal, Alert, TextInput } from 'react-native';
 import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED, WHITE, OUTER_SPACE } from '../Constantes';
 import Toast from 'react-native-toast-message';
-import { deleteDoc, doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import BottomBarComponent from '../components/BottomBarComponent';
 import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useFirebase } from '../Hooks/useFirebase';
+import { firebaseApp, useFirebase } from '../Hooks/useFirebase';
+import { getStorage, ref, uploadBytes, getDownloadURL } from '@firebase/storage';
 import HeaderComponent from '../components/HeaderComponent';
 
-function ProfileScreen() {
+function ProfileScreen({ navigation }) {
     const { db, user } = useFirebase();
-    console.log(user);
-
+    // console.log(user);
     const [image, setImage] = useState(null);
 
     const pickImage = async () => {
@@ -25,21 +25,65 @@ function ProfileScreen() {
         });
 
         console.log(result);
-
         if (!result.cancelled) {
             setImage(result.uri);
         }
+        console.log('Image =>', image);
+
+        if (image) {
+            //Upload Image
+            const storage = await getStorage(firebaseApp);
+            const res = await fetch(image);
+            const blob = await res.blob();
+            const photoPath = `/users/${user.email}`;
+            const storageRef = ref(storage, photoPath);
+            const metadata = {
+                contentType: 'image/jpeg',
+            };
+            await uploadBytes(storageRef, blob, metadata);
+            const url = await getDownloadURL(storageRef);
+
+            try {
+                // Add a new document in collection "posts"
+                await setDoc(doc(db, "users", user.email), {
+                    email: user.email,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    image: url
+                });
+                Toast.show({
+                    type: 'success',
+                    text2: 'Votre profil a été modifié avec succés! 👋'
+                });
+                navigation.navigate('Movies');
+            } catch (error) {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(error.code);
+                setError(error.message);
+                Toast.show({
+                    type: 'error',
+                    text2: `Une erreur est survenue lors de la modification du profil👋`
+                });
+            }
+        }
+
     };
     return (
         <View style={styles.containerProfile}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <HeaderComponent user={user}></HeaderComponent>
                 <View style={styles.cardProfile} >
-                    <Entypo name="user" size={36} color="white" style={{ marginBottom: 10 }} />
                     <View style={styles.containerInfoProfileAvatar}>
-                        {image !== null && < View style={styles.boxImage}>
-                            <Image source={{ uri: image }} style={styles.imageUpload} />
-                        </View>}
+                        {user.image !== null ?
+                            < View style={styles.boxImage}>
+                                <Image source={{ uri: user.image }} style={styles.imageUpload} />
+                            </View>
+                            :
+                            < View style={styles.boxImage}>
+                                <Entypo name="user" size={36} color="white" style={{ marginBottom: 10 }} />
+                            </View>
+                        }
                         <View style={styles.containerUpload}>
                             <TouchableOpacity onPress={pickImage}>
                                 <View style={styles.button} >
@@ -49,16 +93,17 @@ function ProfileScreen() {
                         </View>
                     </View>
                     <View style={styles.containerInfoProfile}>
-                        <Entypo name="mail" size={24} color="white" />
-                        <Text style={styles.infoProfile}>{user.email}</Text>
-                    </View>
-                    <View style={styles.containerInfoProfile}>
                         <Entypo name="v-card" size={24} color="white" />
                         <Text style={styles.infoProfile}>{user.firstname} {user.lastname}</Text>
                     </View>
                     <View style={styles.containerInfoProfile}>
                         <Text style={styles.infoProfile}>Cette application permet de sauvegarder vos films. Qui n'a pas essayer de parler d'un film qu'il avait vu, sans se souvenir du titre. Avec cette application, le 7 ème art ne sera plus un vague souvenir!</Text>
                     </View>
+                    <TouchableOpacity onPress={() => navigation.push('EditProfile', { itemId: user.email })}>
+                        <View style={styles.button} >
+                            <Text style={styles.buttonText}>Change profile</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </ScrollView >
             <BottomBarComponent />
@@ -120,7 +165,8 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderRadius: 50
     },
     containerUpload: {
         flexDirection: 'row',

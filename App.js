@@ -14,6 +14,7 @@ import PostsProvider from './Hooks/usePosts';
 import FormScreen from './screens/FormScreen';
 import ListPostScreen from './screens/ListPostScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 import PostScreen from './screens/PostScreen';
 import EditPostScreen from './screens/EditPostScreen';
 import { LogBox } from 'react-native';
@@ -43,6 +44,7 @@ function App() {
                 <Stack.Screen name="Post" component={PostScreen} />
                 <Stack.Screen name="EditPost" component={EditPostScreen} />
                 <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Stack.Screen name="EditProfile" component={EditProfileScreen} />
               </Stack.Navigator>
             </NavigationContainer>
             <Toast />
