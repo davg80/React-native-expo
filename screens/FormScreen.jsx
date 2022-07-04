@@ -3,10 +3,10 @@ import { ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity, I
 import { BLUE_LIGHT_BG, GRAY_LIGHT, BLUE_BG, RED, WHITE } from '../Constantes';
 import { doc, Firestore, setDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
-import { useFirebase } from '../Hooks/useFirebase.js';
+import { firebaseApp, useFirebase } from '../Hooks/useFirebase.js';
 import * as ImagePicker from 'expo-image-picker';
 import { Entypo } from '@expo/vector-icons';
-import storage from '@react-native-firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from '@firebase/storage';
 import BottomBarComponent from '../components/BottomBarComponent';
 
 const imageBg = { uri: `https://www.themoviedb.org/t/p/w1280/555u92RGJOrQnWAxXxcUGZouREu.jpg` };
@@ -18,8 +18,23 @@ const FormScreen = ({ navigation }) => {
     const [error, setError] = useState("");
 
     const submit = async () => {
-        if (title !== "" && description !== "") {
+        if (title !== "" && description !== "" || image !== "") {
+
+            console.log('Image =>', image);
             //Upload Image
+            const storage = await getStorage(firebaseApp);
+
+            const res = await fetch(image);
+            const blob = await res.blob();
+
+            const photoPath = `/posts/${title}`;
+
+            const storageRef = ref(storage, photoPath);
+            const metadata = {
+                contentType: 'image/jpeg',
+            };
+            await uploadBytes(storageRef, blob, metadata);
+            const url = await getDownloadURL(storageRef);
 
             try {
                 // Add a new document in collection "posts"
@@ -28,7 +43,8 @@ const FormScreen = ({ navigation }) => {
                     description: description,
                     author: user,
                     like: false,
-                    comments: []
+                    comments: [],
+                    image: url
                 });
                 Toast.show({
                     type: 'success',

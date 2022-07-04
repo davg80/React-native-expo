@@ -36,6 +36,13 @@ const ListPostScreen = ({ navigation }) => {
                             <View style={styles.containerPostAndComments} key={index}>
                                 <View style={styles.cardPosts} >
                                     <Text style={styles.titlePost}>{post.title}</Text>
+                                    {post.image &&
+                                        <Image
+                                            resizeMode="contain"
+                                            source={{ uri: `${post.image}` }}
+                                            style={styles.poster}
+                                        />
+                                    }
                                     <Text style={styles.descriptionPost}>{post.description}</Text>
                                     <TouchableOpacity onPress={() => navigation.push('Post', { itemId: post.title })}>
                                         <View style={styles.button} >
@@ -82,7 +89,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginBottom: 45,
         marginTop: 22,
-        padding: 30,
+        padding: 20,
     },
     titlePost: {
         textAlign: 'center',
@@ -91,6 +98,11 @@ const styles = StyleSheet.create({
     },
     titleComment: {
         fontWeight: 'bold'
+    },
+    poster: {
+        width: 200,
+        height: 200,
+        borderRadius: 10
     },
     comment: {
         width: 350,

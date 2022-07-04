@@ -4,7 +4,10 @@ import { BLUE_BG, BLUE_LIGHT_BG, GRAY_LIGHT, RED, WHITE, OUTER_SPACE } from '../
 import Toast from 'react-native-toast-message';
 import { deleteDoc, doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import BottomBarComponent from '../components/BottomBarComponent';
-import { useFirebase } from '../Hooks/useFirebase';
+import { firebaseApp, useFirebase } from '../Hooks/useFirebase';
+import * as ImagePicker from 'expo-image-picker';
+import { Entypo } from '@expo/vector-icons';
+import { getStorage, ref, uploadBytes, getDownloadURL } from '@firebase/storage';
 import HeaderComponent from '../components/HeaderComponent';
 
 const EditPostScreen = ({ route, navigation }) => {
@@ -13,11 +16,13 @@ const EditPostScreen = ({ route, navigation }) => {
     const [description, setDescription] = useState('');
     const [error, setError] = useState("");
     const [post, setPost] = useState([]);
+    const [image, setImage] = useState(null);
     const getPost = async () => {
         const querySnapshot = await getDoc(doc(db, "posts", itemId));
         if (querySnapshot.exists()) {
             setPost(querySnapshot.data());
             setDescription(querySnapshot.data().description)
+            setImage(querySnapshot.data().image)
         } else {
             Toast.show({
                 type: 'error',
@@ -30,7 +35,23 @@ const EditPostScreen = ({ route, navigation }) => {
     }, [])
 
     const submit = async () => {
-        if (description !== "") {
+        if (description !== "" || image !== "") {
+            console.log('Image =>', image);
+            //Upload Image
+            const storage = await getStorage(firebaseApp);
+
+            const res = await fetch(image);
+            const blob = await res.blob();
+
+            const photoPath = `/posts/${itemId}`;
+
+            const storageRef = ref(storage, photoPath);
+            const metadata = {
+                contentType: 'image/jpeg',
+            };
+            await uploadBytes(storageRef, blob, metadata);
+            const url = await getDownloadURL(storageRef);
+
             try {
                 // Add a new document in collection "posts"
                 await setDoc(doc(db, "posts", itemId), {
@@ -38,7 +59,8 @@ const EditPostScreen = ({ route, navigation }) => {
                     description: description,
                     author: user,
                     like: post.like,
-                    comments: post.comments
+                    comments: post.comments,
+                    image: url,
                 });
                 Toast.show({
                     type: 'success',
@@ -57,12 +79,38 @@ const EditPostScreen = ({ route, navigation }) => {
             }
         }
     }
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            setImage(result.uri);
+        }
+    };
     return (
         <View style={styles.containerEditPost}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <HeaderComponent user={user}></HeaderComponent>
                 <View style={styles.cardEditPost}>
                     <Text style={styles.title}>Modification</Text>
+                    {image !== null && < View style={styles.boxImage}>
+                        <Image source={{ uri: image }} style={styles.imageUpload} />
+                    </View>}
+                    <View style={styles.containerUpload}>
+                        <TouchableOpacity onPress={pickImage}>
+                            <View style={styles.button} >
+                                <Text style={styles.buttonText}>   <Entypo name="circle-with-plus" size={18} color="white" />Choose Picture</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.textAreaContainer} >
                         <TextInput
                             style={styles.textArea}
@@ -165,4 +213,18 @@ const styles = StyleSheet.create({
         borderBottomColor: "red",
         borderBottomWidth: StyleSheet.hairlineWidth
     },
+    boxImage: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    imageUpload: {
+        width: 100,
+        height: 100,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    containerUpload: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    }
 });
